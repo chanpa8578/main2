@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Love ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+
+body{
+    min-height:100vh;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 30%, #ff557f 0%, #8b1648 35%, #26051a 75%);
+    color:white;
+}
+
+.screen{
+    position:absolute;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.screen.active{
+    display:flex;
+    animation:screenIn .8s ease;
+}
+
+@keyframes screenIn{
+    from{
+        opacity:0;
+        transform:scale(.95);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+.container{
+    width:min(900px,100%);
+    text-align:center;
+    position:relative;
+    z-index:5;
+}
+
+.glass{
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.25);
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.35),
+        inset 0 0 30px rgba(255,255,255,.05);
+    backdrop-filter:blur(18px);
+    border-radius:30px;
+    padding:35px 25px;
+}
+
+h1{
+    font-size:clamp(2.3rem,8vw,5rem);
+    margin-bottom:15px;
+}
+
+h2{
+    font-size:clamp(1.7rem,5vw,3rem);
+    margin-bottom:25px;
+}
+
+p{
+    font-size:1.1rem;
+    opacity:.9;
+    line-height:1.6;
+}
+
+/* HEART */
+.heart-wrap{
+    width:180px;
+    height:180px;
+    margin:0 auto 30px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation:heartFloat 3s ease-in-out infinite;
+}
+
+.heart{
+    width:120px;
+    height:120px;
+    background:linear-gradient(145deg,#ff174f,#ff5e91);
+    transform:rotate(-45deg);
+    position:relative;
+    border-radius:20px;
+    box-shadow:
+        0 0 25px #ff2d67,
+        0 0 70px rgba(255,45,103,.7);
+}
+
+.heart:before,
+.heart:after{
+    content:"";
+    position:absolute;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:inherit;
+}
+
+.heart:before{
+    top:-60px;
+    left:0;
+}
+
+.heart:after{
+    left:60px;
+    top:0;
+}
+
+.heart-text{
+    position:absolute;
+    z-index:4;
+    font-weight:800;
+    font-size:1.3rem;
+    text-shadow:0 2px 15px rgba(0,0,0,.4);
+}
+
+@keyframes heartFloat{
+    0%,100%{transform:translateY(0) scale(1)}
+    50%{transform:translateY(-15px) scale(1.05)}
+}
+
+/* HEART RAIN */
+.heart-rain{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:1;
+}
+
+.falling-heart{
+    position:absolute;
+    top:-50px;
+    color:#ff709b;
+    animation:fall linear forwards;
+    opacity:.8;
+    filter:drop-shadow(0 0 8px #ff3970);
+}
+
+@keyframes fall{
+    to{
+        transform:translateY(110vh) rotate(360deg);
+        opacity:0;
+    }
+}
+
+/* BUTTON */
+.btn{
+    border:none;
+    outline:none;
+    color:white;
+    cursor:pointer;
+    padding:15px 30px;
+    border-radius:50px;
+    font-size:1rem;
+    font-weight:700;
+    margin-top:25px;
+    background:linear-gradient(135deg,#ff1f62,#ff719d);
+    box-shadow:0 10px 30px rgba(255,25,90,.35);
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-4px) scale(1.03);
+    box-shadow:0 15px 40px rgba(255,25,90,.55);
+}
+
+.btn:active{
+    transform:scale(.95);
+}
+
+/* NUMBER OPTIONS */
+.number-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+    max-width:600px;
+    margin:25px auto;
+}
+
+.number{
+    height:60px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.1);
+    color:white;
+    font-size:1.3rem;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.number:hover,
+.number.selected{
+    background:linear-gradient(135deg,#ff1f62,#ff7da4);
+    transform:translateY(-7px) rotate(-2deg);
+    box-shadow:0 12px 25px rgba(255,0,80,.35);
+}
+
+/* FOOD */
+.food-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:15px;
+    margin:25px auto;
+    max-width:800px;
+}
+
+.food{
+    padding:18px 10px;
+    border-radius:22px;
+    cursor:pointer;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.08);
+    transition:.3s;
+}
+
+.food .emoji{
+    font-size:2.5rem;
+    display:block;
+    margin-bottom:8px;
+}
+
+.food:hover,
+.food.selected{
+    background:rgba(255,74,125,.35);
+    transform:translateY(-7px) scale(1.03);
+    border-color:#ff77a0;
+    box-shadow:0 10px 30px rgba(255,50,100,.2);
+}
+
+/* INPUT */
+textarea{
+    width:100%;
+    min-height:130px;
+    resize:none;
+    border:none;
+    outline:none;
+    border-radius:22px;
+    padding:20px;
+    font-size:1rem;
+    color:white;
+    background:rgba(0,0,0,.2);
+    border:1px solid rgba(255,255,255,.2);
+}
+
+textarea::placeholder{
+    color:rgba(255,255,255,.65);
+}
+
+/* DATE */
+.date-box{
+    margin:25px auto;
+    max-width:400px;
+}
+
+input[type="date"]{
+    width:100%;
+    padding:17px;
+    border-radius:18px;
+    border:none;
+    outline:none;
+    font-size:1.1rem;
+    background:rgba(255,255,255,.9);
+    color:#7c1740;
+}
+
+/* FINAL */
+.final-heart{
+    font-size:6rem;
+    animation:pulse 1.2s infinite;
+    filter:drop-shadow(0 0 25px #ff2b68);
+}
+
+@keyframes pulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.18)}
+}
+
+.summary{
+    margin-top:20px;
+    padding:20px;
+    border-radius:20px;
+    background:rgba(0,0,0,.15);
+    line-height:2;
+}
+
+.sparkle{
+    position:fixed;
+    pointer-events:none;
+    animation:sparkle 1s ease-out forwards;
+    z-index:20;
+}
+
+@keyframes sparkle{
+    from{
+        transform:scale(.3);
+        opacity:1;
+    }
+    to{
+        transform:translate(var(--x),var(--y)) scale(1.4);
+        opacity:0;
+    }
+}
+
+/* MOBILE */
+@media(max-width:600px){
+    .glass{
+        padding:28px 17px;
+    }
+
+    .number-grid{
+        grid-template-columns:repeat(5,1fr);
+        gap:7px;
+    }
+
+    .number{
+        height:50px;
+        font-size:1rem;
+    }
+
+    .food-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .heart-wrap{
+        transform:scale(.85);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="heart-rain" id="heartRain"></div>
+
+<!-- SCREEN 1 -->
+<section class="screen active" id="screen1">
+    <div class="container">
+        <div class="glass">
+
+            <div class="heart-wrap">
+                <div class="heart"></div>
+                <div class="heart-text">I LOVE YOU</div>
+            </div>
+
+            <h1>❤️ I Love You ❤️</h1>
+
+            <p>
+                Ye website sirf tumhare liye hai...
+                <br>
+                kyunki tum mere liye bahut special ho 💕
+            </p>
+
+            <button class="btn" onclick="nextScreen(2)">
+                Mere liye ek sawaal hai 💌
+            </button>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- SCREEN 2 -->
+<section class="screen" id="screen2">
+    <div class="container">
+        <div class="glass">
+
+            <h2>
+                Tum Roshan se kitna pyaar karti ho? ❤️
+            </h2>
+
+            <p>
+                Sach sach batana... 😌
+            </p>
+
+            <div class="number-grid" id="numberGrid">
+                <button class="number" onclick="selectLove(1)">1</button>
+                <button class="number" onclick="selectLove(2)">2</button>
+                <button class="number" onclick="selectLove(3)">3</button>
+                <button class="number" onclick="selectLove(4)">4</button>
+                <button class="number" onclick="selectLove(5)">5</button>
+                <button class="number" onclick="selectLove(6)">6</button>
+                <button class="number" onclick="selectLove(7)">7</button>
+                <button class="number" onclick="selectLove(8)">8</button>
+                <button class="number" onclick="selectLove(9)">9</button>
+                <button class="number" onclick="selectLove(10)">10 ❤️</button>
+            </div>
+
+            <button class="btn" id="loveNext" onclick="nextScreen(3)" disabled>
+                Next 💕
+            </button>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- SCREEN 3 -->
+<section class="screen" id="screen3">
+    <div class="container">
+        <div class="glass">
+
+            <h2>🍕 Tumhe khane mein kya pasand hai?</h2>
+
+            <p>
+                Jitna mann kare utna select kar sakti ho ❤️
+            </p>
+
+            <div class="food-grid">
+
+                <div class="food" onclick="toggleFood(this,'Pizza')">
+                    <span class="emoji">🍕</span>
+                    Pizza
+                </div>
+
+                <div class="food" onclick="toggleFood(this,'Burger')">
+                    <span class="emoji">🍔</span>
+                    Burger
+                </div>
+
+                <div class="food" onclick="toggleFood(this,'Momos')">
+                    <span class="emoji">🥟</span>
+                    Momos
+                </div>
+
+                <div class="food" onclick="toggleFood(this,'Biryani')">
+                    <span class="emoji">🍛</span>
+                    Biryani
+                </div>
+
+                <div class="food" onclick="toggleFood(this,'Pasta')">
+                    <span class="emoji">🍝</span>
+                    Pasta
+                </div>
+
+                <div class="food" onclick="toggleFood(this,'Ice Cream')">
+                    <span class="emoji">🍦</span>
+                    Ice Cream
+                </div>
+
+                <div class="food" onclick="toggleFood(this,'Chocolate')">
+                    <span class="emoji">🍫</span>
+                    Chocolate
+                </div>
+
+                <div class="food" onclick="toggleFood(this,'Cake')">
+                    <span class="emoji">🎂</span>
+                    Cake
+                </div>
+
+            </div>
+
+            <button class="btn" onclick="nextScreen(4)">
+                Mujhe yaad rahega 😌 ❤️
+            </button>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- SCREEN 4 -->
+<section class="screen" id="screen4">
+    <div class="container">
+        <div class="glass">
+
+            <h2>💭 Tumhari koi wish hai?</h2>
+
+            <p>
+                Jo bhi dil mein hai... Roshan ko bata sakti ho ❤️
+            </p>
+
+            <br>
+
+            <textarea
+                id="wish"
+                placeholder="Mujhe ek cute si wish batao... 🥺💕"
+            ></textarea>
+
+            <button class="btn" onclick="nextScreen(5)">
+                Wish save kar do 💌
+            </button>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- SCREEN 5 -->
+<section class="screen" id="screen5">
+    <div class="container">
+        <div class="glass">
+
+            <h2>📅 Ab sabse important sawaal...</h2>
+
+            <p>
+                Roshan ke saath milne ke liye tumhe kaunsi date pasand hai? ❤️
+            </p>
+
+            <div class="date-box">
+                <input type="date" id="date">
+            </div>
+
+            <button class="btn" onclick="finishLoveStory()">
+                Date fix karein? 💕
+            </button>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- FINAL -->
+<section class="screen" id="screen6">
+    <div class="container">
+        <div class="glass">
+
+            <div class="final-heart">❤️</div>
+
+            <h1>Thank You My Love 🥺❤️</h1>
+
+            <p>
+                Tumhare answers ne mera dil khush kar diya.
+                <br>
+                Ab bas tum aur main... aur ek beautiful memory 💕
+            </p>
+
+            <div class="summary" id="summary"></div>
+
+            <h2 style="margin-top:25px;">
+                I Love You Forever ❤️
+            </h2>
+
+        </div>
+    </div>
+</section>
+
+
+<script>
+
+let loveScore = 0;
+let selectedFoods = [];
+
+
+/* SCREEN CHANGE */
+function nextScreen(number){
+
+    document.querySelectorAll(".screen").forEach(screen=>{
+        screen.classList.remove("active");
+    });
+
+    document.getElementById("screen"+number)
+        .classList.add("active");
+
+    createSparkles();
+}
+
+
+/* LOVE SCORE */
+function selectLove(number){
+
+    loveScore = number;
+
+    document.querySelectorAll(".number").forEach(btn=>{
+        btn.classList.remove("selected");
+    });
+
+    document.querySelectorAll(".number")[number-1]
+        .classList.add("selected");
+
+    document.getElementById("loveNext").disabled = false;
+
+    createSparkles();
+}
+
+
+/* FOOD */
+function toggleFood(element,food){
+
+    element.classList.toggle("selected");
+
+    if(selectedFoods.includes(food)){
+
+        selectedFoods =
+            selectedFoods.filter(item=>item!==food);
+
+    }else{
+
+        selectedFoods.push(food);
+
+    }
+
+    createSparkles();
+}
+
+
+/* FINAL */
+function finishLoveStory(){
+
+    const wish =
+        document.getElementById("wish").value.trim();
+
+    const date =
+        document.getElementById("date").value;
+
+    if(!date){
+
+        alert("Pehle apni favourite date select karo ❤️");
+        return;
+
+    }
+
+    const formattedDate =
+        new Date(date+"T00:00:00")
+        .toLocaleDateString("en-IN",{
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+        });
+
+    document.getElementById("summary").innerHTML = `
+
+        <div>❤️ Roshan ke liye pyaar: <b>${loveScore}/10</b></div>
+
+        <div>
+            🍕 Favourite food:
+            <b>
+            ${
+                selectedFoods.length
+                ? selectedFoods.join(", ")
+                : "Sab kuch 😋"
+            }
+            </b>
+        </div>
+
+        <div>
+            💭 Wish:
+            <b>
+            ${
+                wish || "Bas Roshan ke saath time spend karna ❤️"
+            }
+            </b>
+        </div>
+
+        <div>
+            📅 Meeting Date:
+            <b>${formattedDate}</b>
+        </div>
+
+    `;
+
+    nextScreen(6);
+
+    bigCelebration();
+}
+
+
+/* HEART RAIN */
+function createHeart(){
+
+    const heart =
+        document.createElement("div");
+
+    heart.className="falling-heart";
+
+    heart.innerHTML =
+        ["❤️","💕","💗","💖","💘","💝"]
+        [Math.floor(Math.random()*6)];
+
+    heart.style.left =
+        Math.random()*100+"vw";
+
+    heart.style.fontSize =
+        (12+Math.random()*25)+"px";
+
+    heart.style.animationDuration =
+        (4+Math.random()*5)+"s";
+
+    document.getElementById("heartRain")
+        .appendChild(heart);
+
+    setTimeout(()=>{
+        heart.remove();
+    },9000);
+}
+
+setInterval(createHeart,350);
+
+
+/* SPARKLES */
+function createSparkles(){
+
+    for(let i=0;i<12;i++){
+
+        const sparkle =
+            document.createElement("div");
+
+        sparkle.className="sparkle";
+
+        sparkle.innerHTML =
+            ["❤️","✨","💕","💖"]
+            [Math.floor(Math.random()*4)];
+
+        sparkle.style.left =
+            (45+Math.random()*10)+"vw";
+
+        sparkle.style.top =
+            (45+Math.random()*10)+"vh";
+
+        sparkle.style.setProperty(
+            "--x",
+            (Math.random()*300-150)+"px"
+        );
+
+        sparkle.style.setProperty(
+            "--y",
+            (Math.random()*300-150)+"px"
+        );
+
+        document.body.appendChild(sparkle);
+
+        setTimeout(()=>{
+            sparkle.remove();
+        },1000);
+    }
+}
+
+
+/* FINAL CELEBRATION */
+function bigCelebration(){
+
+    for(let i=0;i<80;i++){
+
+        setTimeout(()=>{
+            createSparkles();
+        },i*40);
+
+    }
+}
+
+
+/* DEFAULT DATE = TOMORROW */
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate()+1);
+
+document.getElementById("date").min =
+    tomorrow.toISOString().split("T")[0];
+
+</script>
+
+</body>
+</html>
